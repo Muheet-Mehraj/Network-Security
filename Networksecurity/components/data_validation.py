@@ -66,7 +66,7 @@ class DataValidation:
             raise NetworkSecurityException(e,sys)
         
     
-    def initiate_data_validation(self)->DataValidationArtifact:
+    def initiate_data_validation(self) -> DataValidationArtifact:
         try:
             train_file_path=self.data_ingestion_artifact.trained_file_path
             test_file_path=self.data_ingestion_artifact.test_file_path
@@ -76,7 +76,6 @@ class DataValidation:
             test_dataframe=DataValidation.read_data(test_file_path)
             
             ## validate number of columns
-
             status=self.validate_number_of_columns(dataframe=train_dataframe)
             if not status:
                 error_message=f"Train dataframe does not contain all columns.\n"
