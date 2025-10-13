@@ -2,7 +2,7 @@ import pymongo
 from pymongo.errors import ConnectionFailure
 
 # Replace placeholders with your actual credentials
-connection_string = "mongodb+srv://muheetmehraj94_db_user:Muheet123@cluster0.j2inunn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+connection_string = "mongodb....."
 
 try:
     client = pymongo.MongoClient(connection_string)
