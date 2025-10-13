@@ -36,6 +36,7 @@ from sklearn.ensemble import (
     RandomForestClassifier,
 )
 
+dagshub.init(repo_owner='Muheet-Bhat', repo_name='Network-Security', mlflow=True)
 
 
 
@@ -62,7 +63,7 @@ class ModelTrainer:
             mlflow.log_metric("f1_score",f1_score)
             mlflow.log_metric("precision",precision_score)
             mlflow.log_metric("recall_score",recall_score)
-            mlflow.sklearn.log_model(best_model, "model", registered_model_name=type(best_model).__name__)
+            mlflow.sklearn.log_model(best_model, "model")
 
         
         
@@ -118,6 +119,7 @@ class ModelTrainer:
         classification_train_metric=get_classification_score(y_true=y_train,y_pred=y_train_pred)
         
         ## Track the experiements with mlflow
+
         self.track_mlflow(best_model,classification_train_metric)
 
 
