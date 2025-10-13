@@ -1,0 +1,7 @@
+duration,protocol_type,src_bytes,dst_bytes,flag,land,wrong_fragment,urgent,hot,num_failed_logins,logged_in,num_compromised,root_shell,su_attempted,num_file_creations,num_shells,num_access_files,num_outbound_cmds,is_host_login,is_guest_login,count,srv_count,serror_rate,srv_serror_rate,rerror_rate,srv_rerror_rate,same_srv_rate,diff_srv_rate,srv_diff_host_rate,dst_host_count,dst_host_srv_count,dst_host_same_srv_rate,dst_host_diff_srv_rate,dst_host_same_src_port_rate,dst_host_srv_diff_host_rate,dst_host_serror_rate,dst_host_srv_serror_rate,dst_host_rerror_rate,dst_host_srv_rerror_rate,label
+0,tcp,181,5450,SF,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,9,9,0.0,0.0,0.0,0.0,1.0,0.0,0.0,255,255,1.0,0.0,0.03,0.0,0.0,0.0,0.0,0.0,normal
+0,udp,239,486,SF,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,19,19,0.0,0.0,0.0,0.0,1.0,0.0,0.0,255,255,1.0,0.0,0.05,0.0,0.0,0.0,0.0,0.0,normal
+0,tcp,235,1337,SF,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,29,15,0.0,0.0,0.0,0.0,0.52,0.48,0.0,150,25,0.15,0.85,0.0,0.05,0.0,0.0,0.0,0.0,normal
+0,tcp,0,0,S0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,150,30,1.0,1.0,0.0,0.0,0.2,0.8,0.0,255,255,0.0,1.0,0.0,0.0,1.0,1.0,0.0,0.0,attack
+2,icmp,105,146,SF,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,11,11,0.0,0.0,0.0,0.0,1.0,0.0,0.0,255,255,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,normal
+0,tcp,0,0,REJ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0.0,0.0,0.0,0.0,1.0,0.0,0.0,255,255,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,attack
