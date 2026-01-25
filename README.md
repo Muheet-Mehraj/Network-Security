@@ -179,7 +179,6 @@ docker run -p 5000:5000 network-security
 ## Author
 
 **Muheet Mehraj**
-B.Tech CSE
 GitHub: [Muheet-Mehraj](https://github.com/Muheet-Mehraj)
 
 ---
