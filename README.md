@@ -33,7 +33,7 @@
 | Training Data | Network traffic features |
 | Model File | `best_model.pkl` |
 
-> ⚠️ Add your actual F1-score, precision, recall, and accuracy here after evaluation.
+
 
 ---
 
