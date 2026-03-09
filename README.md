@@ -37,7 +37,7 @@
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 Raw Network Traffic Data
