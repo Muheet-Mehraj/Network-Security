@@ -1,99 +1,109 @@
-# 🔐 Network-Security
+# Network-Security
 
-*Production-grade Machine Learning Pipeline for Network Threat Classification*
+**Production-grade ML pipeline for network threat classification — containerized, cloud-deployed, and CI/CD automated.**
 
 ![python](https://img.shields.io/badge/python-3.9+-blue)
 ![ml](https://img.shields.io/badge/ml-classification-green)
 ![docker](https://img.shields.io/badge/docker-ready-blue)
 ![aws](https://img.shields.io/badge/AWS-ECR-orange?logo=amazonaws)
 ![ci/cd](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-black?logo=githubactions)
+![mlflow](https://img.shields.io/badge/tracking-MLflow-blue)
 ![status](https://img.shields.io/badge/project-active-success)
-![license](https://img.shields.io/badge/license-MIT-green)
-
-> Classifies network traffic as **normal or malicious** using a supervised ML pipeline — containerized with Docker, deployed to **AWS ECR** via GitHub Actions CI/CD.
 
 ---
 
-## 🚀 Live Deployment
+## Overview
 
-| Component | Platform |
-|---|---|
-| Container Registry | AWS Elastic Container Registry (ECR) |
-| CI/CD | GitHub Actions (19 workflow runs) |
-| Inference API | Docker container on port 5000 |
+Classifies network traffic as **legitimate or malicious (phishing)** using a supervised ML pipeline built to production standards. The system covers the full lifecycle — data ingestion from MongoDB, schema validation, KNN imputation, automated model selection, artifact sync to AWS S3, and a FastAPI inference endpoint — all containerized with Docker and deployed to AWS ECR via GitHub Actions.
 
 ---
 
-## 📊 Model Performance
+## Model Performance
 
-| Metric | Score |
-|---|---|
-| Task | Binary Classification |
-| Model | Scikit-learn Classifier |
-| Training Data | Network traffic features |
-| Model File | `best_model.pkl` |
+| Metric     | Score                          |
+|------------|-------------------------------|
+| F1 Score   | **97.65%**                    |
+| Precision  | **97.00%**                    |
+| Recall     | **98.31%**                    |
+| Baseline   | 93.00% (Logistic Regression)  |
+| Best Model | Random Forest (GridSearchCV)  |
+| Dataset    | 11,055 samples · 56% legitimate / 44% phishing |
+| Validation | 10 MLflow runs on DagsHub     |
 
-
+Model selected via **GridSearchCV across 5 classifiers and 30+ hyperparameter combinations**. All runs tracked and versioned in MLflow.
 
 ---
 
-##  Architecture
+## Architecture
 
 ```
-Raw Network Traffic Data
+MongoDB Atlas (Raw Data)
         ↓
-  Data Ingestion (push_data.py)
+  Data Ingestion — push_data.py
         ↓
-  Schema Validation (data_schema/)
+  Schema Validation — data_schema/
         ↓
-  Feature Processing
+  KNN Imputation + Feature Engineering
         ↓
-  Model Training (main.py)
+  GridSearchCV — 5 classifiers, 30+ hyperparameters
         ↓
-  best_model.pkl
+  KS-2 Drift Detection (train vs test split)
         ↓
-  FastAPI Inference (app.py)
+  best_model.pkl → AWS S3 artifact sync
+        ↓
+  FastAPI Inference API — app.py
         ↓
   Docker Container
         ↓
-  AWS ECR → Deployed
+  AWS ECR → GitHub Actions CI/CD
 ```
 
 ---
 
-## ☁️ CI/CD Pipeline (AWS ECR)
+## Engineering Highlights
 
-This project uses a **fully automated deployment pipeline**:
-
-1. Code pushed to `main` branch
-2. GitHub Actions triggers workflow
-3. Docker image built automatically
-4. Image pushed to **AWS Elastic Container Registry (ECR)**
-5. Deployment updated
-
-**Workflow runs:** 19 successful deployments including:
-- `Push Docker to ECR` ✅
-- `ECR Repository` ✅
-- `Deployment Changes` ✅
-- `Cloud S3 Storage` integration
+- **Automated model selection** — GridSearchCV across Logistic Regression, Random Forest, Decision Tree, Gradient Boosting, and AdaBoost; best model improved F1 from 93% to 97.65%
+- **KS-2 drift detection** — statistical test between train and test splits to catch distribution shift before deployment
+- **MLflow experiment tracking** — all 10 runs logged on DagsHub with metrics, parameters, and artifacts
+- **Modular pipeline** — ingestion, validation, training, and inference fully decoupled as separate stages
+- **Schema-driven validation** — data quality enforced at ingestion before every training run
+- **S3 artifact sync** — model and preprocessor automatically pushed to AWS S3 after every successful training run
+- **19 automated CI/CD deployments** — zero manual deployments, full GitHub Actions → Docker → AWS ECR pipeline
 
 ---
 
-## 📁 Project Structure
+## Technology Stack
+
+| Category        | Technology                              |
+|-----------------|-----------------------------------------|
+| Language        | Python 3.9+                             |
+| ML              | Scikit-learn, XGBoost                   |
+| Experiment Tracking | MLflow, DagsHub                     |
+| Data            | NumPy, Pandas, KNN Imputation           |
+| API             | FastAPI                                 |
+| Database        | MongoDB Atlas                           |
+| Artifact Storage| AWS S3                                  |
+| Containerization| Docker                                  |
+| Container Registry | AWS ECR                              |
+| CI/CD           | GitHub Actions                          |
+
+---
+
+## Project Structure
 
 ```
 Network-Security/
 │
-├── .github/workflows/     # CI/CD pipeline (GitHub Actions → AWS ECR)
+├── .github/workflows/     # GitHub Actions → AWS ECR CI/CD pipeline
 │
-├── Network_Data/          # Training dataset
+├── Network_Data/          # Training dataset (phishing detection)
 ├── valid_data/            # Validation / test data
 ├── data_schema/           # Schema validation rules
 ├── final_model/           # Model artifacts
 ├── best_model.pkl         # Trained classification model
 │
 ├── Networksecurity/       # Core ML pipeline package
-├── templates/             # Inference UI templates
+├── templates/             # FastAPI inference UI
 │
 ├── app.py                 # FastAPI application entry point
 ├── main.py                # Pipeline execution (training)
@@ -107,40 +117,43 @@ Network-Security/
 
 ---
 
-## 🛠️ Technology Stack
-
-| Category | Technology |
-|---|---|
-| Language | Python 3.9+ |
-| ML | Scikit-learn |
-| Data | NumPy, Pandas |
-| API | FastAPI |
-| Database | MongoDB |
-| Containerization | Docker |
-| Container Registry | AWS ECR |
-| CI/CD | GitHub Actions |
-| Model Storage | Pickle |
-
----
-
-## ⚡ Quickstart
+## Local Setup
 
 ### Prerequisites
 - Python 3.9+
-- Docker (for containerized run)
-- AWS CLI configured (for ECR deployment)
+- Docker
+- MongoDB Atlas connection string
+- AWS credentials (for S3 and ECR)
 
-### Local Setup
+### Run Locally
 
 ```bash
 git clone https://github.com/Muheet-Mehraj/Network-Security.git
 cd Network-Security
 
 python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS/Linux
 
 pip install -r requirements.txt
-python app.py
+```
+
+Create a `.env` file in the root:
+
+```env
+MONGO_DB_URL=your_mongodb_connection_string
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+AWS_REGION=your_region
+AWS_BUCKET_NAME=your_bucket
+```
+
+Then run:
+
+```bash
+python push_data.py   # Ingest data into MongoDB
+python main.py        # Run training pipeline
+python app.py         # Start FastAPI inference server
 ```
 
 ### Docker
@@ -150,53 +163,46 @@ docker build -t network-security .
 docker run -p 5000:5000 network-security
 ```
 
-### Pull from AWS ECR
+---
 
-```bash
-aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin <your-ecr-uri>
-docker pull <your-ecr-uri>/network-security:latest
-docker run -p 5000:5000 <your-ecr-uri>/network-security:latest
-```
+## CI/CD Pipeline
+
+Every push to `main` triggers:
+
+1. GitHub Actions workflow starts
+2. Docker image built automatically
+3. Image pushed to **AWS Elastic Container Registry (ECR)**
+4. Deployment updated
+
+**19 successful automated deployments** — no manual intervention at any stage.
 
 ---
 
-## 🔑 Engineering Highlights
+## Limitations
 
-- **Modular ML pipeline** — ingestion, validation, training, inference fully separated
-- **Schema-driven validation** — data quality enforced before every training run
-- **Packaged Python project** — installable as a module via `setup.py`
-- **Dockerized** — fully containerized, environment-agnostic
-- **AWS ECR deployment** — production container registry with automated push
-- **GitHub Actions CI/CD** — 19 automated workflow runs, zero manual deployments
-- **MongoDB integration** — persistent data ingestion pipeline
+- Relies on supervised patterns in training data — novel, unseen attack vectors may be missed
+- Not a real-time packet capture system; operates on pre-collected network traffic features
+- Dataset quality directly impacts detection accuracy
 
 ---
 
-## ⚠️ Limitations
-
-- Relies on supervised patterns in training data — novel attack vectors may be missed
-- Not a real-time packet capture system
-- Dataset quality directly impacts model performance
-
----
-
-## 🔮 Future Improvements
+## Future Improvements
 
 - [ ] Real-time traffic ingestion via packet capture
-- [ ] Ensemble / Deep Learning models for improved detection
-- [ ] Model explainability with SHAP / LIME
-- [ ] Auto-retraining pipeline on new threat data
+- [ ] SHAP / LIME explainability for model decisions
+- [ ] Auto-retraining pipeline triggered by drift detection
 - [ ] Kubernetes deployment for horizontal scaling
+- [ ] Deep learning models (LSTM) for sequential traffic pattern detection
 
 ---
 
-## 👤 Author
+## Author
 
 **Muheet Mehraj**
-GitHub: [@Muheet-Mehraj](https://github.com/Muheet-Mehraj)
+[GitHub](https://github.com/Muheet-Mehraj) · [LinkedIn](https://linkedin.com/in/muheet-mehraj) · muheetmehraj93@gmail.com
 
 ---
 
-## 📄 License
+## License
 
 MIT License — free to use, modify, and distribute.
